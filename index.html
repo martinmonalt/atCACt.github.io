@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Asesor Fitness</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-4xl mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-green-600 text-white p-6">
+                <h1 class="text-3xl font-bold text-center">Mi Asesor Fitness</h1>
+            </div>
+            <div class="p-6">
+                <form id="fitnessForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="number" id="edad" placeholder="Edad" class="p-2 border rounded" required>
+                        <input type="number" id="peso" placeholder="Peso (kg)" class="p-2 border rounded" required>
+                        <input type="number" id="altura" placeholder="Altura (cm)" class="p-2 border rounded" required>
+                        <select id="genero" class="p-2 border rounded" required>
+                            <option value="">Selecciona género</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                        </select>
+                        <select id="objetivo" class="p-2 border rounded" required>
+                            <option value="">Selecciona objetivo</option>
+                            <option value="definicion">Definición muscular</option>
+                            <option value="volumen">Ganancia muscular</option>
+                            <option value="mantenimiento">Mantenimiento</option>
+                        </select>
+                        <select id="actividad" class="p-2 border rounded" required>
+                            <option value="">Nivel de actividad</option>
+                            <option value="sedentario">Sedentario</option>
+                            <option value="ligero">Ligero</option>
+                            <option value="moderado">Moderado</option>
+                            <option value="activo">Muy activo</option>
+                        </select>
+                        <select id="deporte" class="p-2 border rounded" required>
+                            <option value="">Selecciona tu deporte</option>
+                            <option value="futbol">Fútbol</option>
+                            <option value="basket">Baloncesto</option>
+                            <option value="natacion">Natación</option>
+                            <option value="ciclismo">Ciclismo</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700">
+                        Calcular Plan
+                    </button>
+                </form>
+            </div>
+            <div id="resultados" class="p-6 hidden">
+                <div class="space-y-6">
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg text-green-800">Calorías Diarias:</h3>
+                        <p id="calorias" class="text-2xl font-bold"></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h3 class="font-bold text-lg text-green-800">Plan de Entrenamiento:</h3>
+                        <div id="entrenamiento" class="mt-2"></div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h3 class="font-bold text-lg text-green-800">Plan de Alimentación:</h3>
+                        <div id="alimentacion" class="mt-2"></div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h3 class="font-bold text-lg text-green-800">Recomendaciones para tu Deporte:</h3>
+                        <div id="deporteRecomendacion" class="mt-2"></div>
+                    </div>
+                    <button onclick="window.location.reload()" class="w-full bg-gray-600 text-white p-3 rounded hover:bg-gray-700">
+                        Comenzar de Nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('fitnessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const edad = parseInt(document.getElementById('edad').value);
+            const peso = parseInt(document.getElementById('peso').value);
+            const altura = parseInt(document.getElementById('altura').value);
+            const genero = document.getElementById('genero').value;
+            const objetivo = document.getElementById('objetivo').value;
+            const actividad = document.getElementById('actividad').value;
+            const deporte = document.getElementById('deporte').value;
+            let tmb = (genero === 'masculino') ? (10 * peso) + (6.25 * altura) - (5 * edad) + 5 : (10 * peso) + (6.25 * altura) - (5 * edad) - 161;
+            let calorias = tmb * (actividad === 'sedentario' ? 1.2 : actividad === 'ligero' ? 1.375 : actividad === 'moderado' ? 1.55 : 1.725);
+            calorias = objetivo === 'definicion' ? calorias - 500 : objetivo === 'volumen' ? calorias + 300 : calorias;
+            document.getElementById('calorias').textContent = Math.round(calorias) + ' kcal';
+            document.getElementById('entrenamiento').innerHTML = objetivo === 'definicion' ? 'Entrenamiento de alta intensidad con cardio' : 'Rutina de fuerza con ejercicios compuestos';
+            document.getElementById('alimentacion').innerHTML = 'Dieta balanceada con proteínas, carbohidratos y grasas saludables';
+            let deporteRecomendacion = {
+                futbol: 'Mejora tu resistencia con HIIT y trabaja fuerza en piernas.',
+                basket: 'Enfoca tu entrenamiento en saltos, velocidad y resistencia.',
+                natacion: 'Trabaja fuerza en el core y mejora tu técnica en el agua.',
+                ciclismo: 'Haz entrenamientos de resistencia y potencia en piernas.'
+            };
+            document.getElementById('deporteRecomendacion').textContent = deporteRecomendacion[deporte] || 'Selecciona un deporte para ver recomendaciones.';
+            document.getElementById('fitnessForm').classList.add('hidden');
+            document.getElementById('resultados').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
